@@ -1,0 +1,22 @@
+RewriteEngine ON
+RewriteCond	%{REQUEST_FILENAME}	!-f
+RewriteCond	$1	!^(index\.php|robots\.txt|favicon\.ico|Sitemap\.xml|pma)
+RewriteRule	^coach(.*)$ coach.php/$1 [L]
+
+RewriteCond	%{REQUEST_FILENAME}	!-f
+RewriteRule	^system(.*)$ system.php/$1 [L]
+
+RewriteCond	%{REQUEST_FILENAME}	!-f
+RewriteRule	^website(.*)$ website.php/$1 [L]
+
+RewriteCond	%{REQUEST_FILENAME}	!-f
+RewriteRule	^business(.*)$ business.php/$1 [L]
+
+RewriteCond	%{REQUEST_FILENAME}	!-f
+RewriteRule	^group(.*)$ group.php/$1 [L]
+
+RewriteCond	%{REQUEST_FILENAME}	!-f
+RewriteRule	^customer(.*)$ customer.php/$1 [L]
+
+RewriteCond	%{REQUEST_FILENAME}	!-f
+RewriteRule	^service(.*)$ service.php/$1 [L]

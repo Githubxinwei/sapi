@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>健身管理app</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				overflow-x: hidden;
+				overflow-y: hidden;
+			}
+			ul li{
+				list-style: none;
+			}
+			
+			#wrap {
+				width: 100%;
+				height: 100%;
+				background: url('img/img_background.png') no-repeat top;
+				background-size: 100% 100%;
+				position: relative;
+			}
+			
+			.title {
+				width: 90%;
+				color: #FFFFFF;
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 12%;
+				margin: auto;
+				font-size: 16px;
+				font-weight: bold;
+				text-align: center;
+			}
+			#cover {
+				position: fixed;
+				z-index: 10;
+				width: 100%;
+				height: 100%;
+				background: #000000;
+				display: none;
+			}
+			
+			.cover {
+				position: fixed;
+				top: 40px;
+				left: 20px;
+				width: 40%;
+				height: 20px;
+				color: #FFFFFF;
+				background-color: #000000;
+				border: none;
+				font-size: 16px;
+				font-weight: 600;
+			}
+			#download{
+				width: 100%;
+				height: 28%;
+				position: absolute;
+				bottom: 0;
+				background: rgba(255, 255, 255, 0.3);
+			}
+			.download {
+				width: 95%;
+				height: 100%;
+				margin: auto;
+			}
+			.left{
+				width: 48%;
+				height: 100%;
+				float: left;
+				text-align: center;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			.er_code {
+				width: 60%;
+				z-index: 2;
+			}
+			
+			.span_code {
+				color: #ffffff;
+				font-weight: bold;
+				margin-bottom: 3%;
+				font-size: 14px;
+			}
+				.line{
+					position: absolute;
+					left: 0;
+					right: 0;
+					top: 0;
+					bottom: 0; 	
+					margin: auto;
+					width: 1px;
+					height: 80%;
+					background: #ffffff;
+				}
+			.right{
+				width: 49.5%;
+				height: 100%;
+				text-align: center;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			.img_ios {
+				width: 60%;
+			}
+			
+			.img_android {
+				width: 60%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="wrap">
+			<div id="download">
+				<ul class="download">
+					<li class="left">
+						<p class="span_code">二维码下载</p>
+						<img src="img/er_code.png" class="er_code" />
+					</li>
+					<li class="line"></li>
+					<li class="right">
+						<img src="img/Android.png" class="img_android"/><br />
+						<img src="img/IOS.png" class="img_ios"/>
+					</li>
+				</ul>
+			</div>
+
+			<p class="title">I Love Sports服务端，让管理更简单！</p>
+			<div id="cover">
+				<img src="img/tanc.jpg" style="width: 100%; margin-top: 50px;" />
+				<button class="cover">关闭微信遮罩层</button>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var IOS = document.getElementsByClassName("img_ios")[0];
+		var Android = document.getElementsByClassName("img_android")[0];
+		IOS.onclick = function() {
+			var ua = navigator.userAgent.toLowerCase();
+			if(ua.match(/MicroMessenger/i) == "micromessenger") {
+				document.getElementById("cover").style.display = 'block';
+				document.getElementsByClassName("cover")[0].onclick = function() {
+					document.getElementById("cover").style.display = 'none';
+				}
+			}
+			window.location.href = ' http://itunes.apple.com/us/app/id1364377775';
+		}
+		Android.onclick = function() {
+			var ua = navigator.userAgent.toLowerCase();
+			if(ua.match(/MicroMessenger/i) == "micromessenger") {
+				document.getElementById("cover").style.display = 'block';
+				document.getElementsByClassName("cover")[0].onclick = function() {
+					document.getElementById("cover").style.display = 'none';
+				}
+			}
+			window.location.href = 'http://product.aixingfu.net/android/ilovesports_server_qiangxian.apk';
+		}
+	</script>
+
+</html>

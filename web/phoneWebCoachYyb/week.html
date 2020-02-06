@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>周预约表</title>
+		<script src="jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+	      var bw = (document.documentElement.clientWidth/5)+"px";
+	      var htmlTag = document.getElementsByTagName("html")[0];
+	      htmlTag.style.fontSize=bw;
+	    </script>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			body{
+				position: relative;
+			}
+			ul,li{
+				list-style: none;
+			}
+			ul{
+				width: 100%;
+			}
+			li{
+				box-sizing: border-box;
+				float: left;
+				width: 12.5%;
+				height: 0.62rem;
+				text-align: center;
+				line-height: 0.62rem;
+				border: 1px solid #f5f5f5;
+				font-size: .16rem;
+			}
+			.lists{
+				position: relative;
+			}
+			.lists li{
+				background: #ccebff;
+				color: #0994f1;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="layout"></div>
+		<ul class="lists"></ul>
+		<script type="text/javascript">
+			var str = "";
+			function toDate (time) {
+				var date = new Date(time*1000);
+		        h = date.getHours();
+		        m = date.getMinutes();
+				return (h-8)*60+m;
+			}
+			for (var i = 8;i<=23;i++) {
+				str+=`<ul><li>${i}:00</li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>`;
+			}
+			$(".layout").html(str);
+			var liWidth = $(".layout").find("li").eq(0).width()+2;
+			var liHeight = 0.62;
+			var xhr = $.ajax();
+			function requireData(accesstoken,start,end){
+				var dataList = "";
+				var lists = "";
+				$(".lists").html(lists);
+				xhr.abort();
+				xhr = $.ajax({
+					type:"get",
+					url:`http://api.aixingfu.net/coach/class/about-week?accesstoken=${accesstoken}&start=${start}&end=${end}`,
+					success:function(data){
+						dataList = data.data;
+						for (var i = 0; i < dataList.length;i++) {
+							if (dataList[i].item) {
+								for (var j = 0; j < dataList[i].item.length; j++) {
+									var liheight = (toDate(dataList[i].item[j].end)-toDate(dataList[i].item[j].start))/60*liHeight;
+									var liY = toDate(dataList[i].item[j].start)/60*liHeight;
+									lists+=`<li style="position:absolute;left:${liWidth*(i+1)}px;top:${liY}rem;height:${liheight}rem;">${dataList[i].item[j].name}</li>`;
+								}
+							}
+						}
+						$(".lists").html(lists);
+						return "success";
+					},
+					error:function(xhr,status,erro){
+						return status;
+					}
+				})
+			};
+		</script>
+	</body>
+</html>

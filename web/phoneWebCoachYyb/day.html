@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title>日预约表</title>
+		<script src="jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+	      var bw = (document.documentElement.clientWidth/5)+"px";
+	      var htmlTag = document.getElementsByTagName("html")[0];
+	      htmlTag.style.fontSize=bw;
+	    </script>
+	    <style type="text/css">
+	    	*{
+				margin: 0;
+				padding: 0;
+			}
+			body{
+				overflow-x:hidden;
+			}
+			ul,li{
+				list-style: none;
+			}
+			header{
+				height: .6rem;
+				background: #f2edf6;
+				font-size: .17rem;
+				text-align: center;
+				line-height: .6rem;
+			}
+			.layout li{
+				font-size: .16rem;
+				height: 45px;
+			}
+			.layout li span{
+				display: inline-block;
+				width: 10%;
+				text-align: center;
+			}
+			.layout li div{
+				display: inline-block;
+				width: 90%;
+				height: 23px;
+				margin-top: 22px;
+				box-sizing: border-box;
+				border-top: 1px solid #BABABA;
+				border-bottom:1px dotted #BABABA;
+				vertical-align: middle;
+			}
+			.main{
+				position: relative;
+			}
+			.lists li{
+				font-size: .16rem;
+				background: #33adff;
+				color: #fff;
+				width: 84%;
+			}
+			.lists li span{
+				margin-left: .1rem;
+			}
+			.nowTime li{
+				font-size: .12rem;
+				color: red;
+				width: 90%;
+				padding-left: .5rem;
+			}
+			.nowTime li span{
+				display: inline-block;
+				box-sizing: border-box;
+				width: 10%;
+				height: .4rem;
+				line-height: .4rem;
+				text-align: right;
+				padding-right: 4px;
+				position: relative;
+				top: -0.21rem;
+			}
+			.nowTime li div{
+				display: inline-block;
+				width: 88%;
+				border-bottom:1px dotted red;
+				vertical-align: middle;
+				position: relative;
+				top: -0.22rem;
+			}
+	    </style>
+	</head>
+	<body>
+		<header></header>
+		<div class="main">
+			<ul class="layout"></ul>
+			<ul class="lists"></ul>
+			<ul class="nowTime"></ul>
+		</div>
+		<script type="text/javascript">
+			var date = new Date();
+			var str = "";
+			for (var i = 8; i<= 23;i++) {
+				str +=`<li><span>${i}:00</span><div></div></li>`
+			}
+			$(".layout").html(str);
+			var liheight = $(".layout").find("li").eq(0).height();
+			//时间戳转换
+			function toDate (time) {
+				var date = new Date(time*1000);
+		        h = date.getHours();
+		        m = date.getMinutes();
+				return (h-8)*60+m;
+			}
+			var xhr = $.ajax();
+			function requireData(accesstoken,dateTime){
+				//当前页 头部时间
+				dateTime +="";
+				var dateArr = dateTime.split("-");
+				$("header").eq(0).html(`${dateArr[0]}年${dateArr[1]}月${dateArr[2]}日`)
+				
+				//当前时间（红线）
+				if (dateArr[0]==date.getFullYear()&&dateArr[1]==(date.getMonth()+1)&&dateArr[2]==date.getDate()) {
+					if(date.getHours()>=8 && date.getHours()<=23){
+						var hour = date.getHours();
+						var minutes = date.getMinutes();
+						if (!(minutes+'').split("")[1]) {
+							var curtime = hour+":"+"0"+minutes;
+						}else{
+							var curtime = hour+":"+minutes;
+						}
+						$(".nowTime").html(`<li style="position:absolute;top:${(((hour-8)*60+minutes)/60+0.5)*liheight-0.5}px"><div></div><span>${curtime}</span></li>`)
+					}
+				}else{
+					$(".nowTime").html("");
+				}
+				var listStr = "";
+				$(".lists").html(listStr);
+				//请求数据
+				xhr.abort();
+				xhr = $.ajax({
+					type:"get",
+					url:`http://api.aixingfu.net/coach/class/about-day?accesstoken=${accesstoken}&time=${dateTime}`,
+					success:function(data){
+						if (data.data) {
+							if (data.data.length!=0) {
+								for (var i = 0; i<data.data.length;i++) {
+									listStr+=`<li style="position:absolute;left:16%;top:${(toDate(data.data[i].start)/60+0.5)*liheight}px;height:${liheight}px;line-height:${liheight}px">
+												<span>${data.data[i].name}</span>
+												<span>${data.data[i].product_name}</span>
+												<span>课时费￥:${data.data[i].money}</span>
+												<span>${data.data[i].num}/${data.data[i].course_amount}</span>
+											</li>`;
+								}
+								$(".lists").html(listStr);
+								return "success";
+							}	
+						}	
+					},
+					error:function(xhr,status,erro){
+						return status;
+					}
+				})
+			}
+		</script>
+	</body>
+</html>
